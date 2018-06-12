@@ -1808,6 +1808,14 @@ By donating you help us to bring blockchain technology one step closer to ordina
                                     <outlet property="delegate" destination="AaS-13-ZCZ" id="qec-MD-71f"/>
                                 </connections>
                             </tableView>
+                            <tableView clipsSubviews="YES" contentMode="scaleToFill" alwaysBounceVertical="YES" dataMode="prototypes" style="plain" separatorStyle="none" rowHeight="-1" estimatedRowHeight="-1" sectionHeaderHeight="28" sectionFooterHeight="28" translatesAutoresizingMaskIntoConstraints="NO" id="mf9-84-q3x">
+                                <rect key="frame" x="375" y="282" width="375" height="330"/>
+                                <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                                <connections>
+                                    <outlet property="dataSource" destination="AaS-13-ZCZ" id="JTv-GN-YUw"/>
+                                    <outlet property="delegate" destination="AaS-13-ZCZ" id="xZi-9h-W7P"/>
+                                </connections>
+                            </tableView>
                             <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="1Fz-V4-uxe" userLabel="BottomView">
                                 <rect key="frame" x="0.0" y="612" width="375" height="55"/>
                                 <subviews>
@@ -1946,9 +1954,40 @@ By donating you help us to bring blockchain technology one step closer to ordina
                             </view>
                             <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="jUF-mM-u86">
                                 <rect key="frame" x="0.0" y="252" width="375" height="30"/>
+                                <subviews>
+                                    <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="AAl-uK-hk4">
+                                        <rect key="frame" x="0.0" y="0.0" width="187.5" height="34"/>
+                                        <fontDescription key="fontDescription" name="AvenirNext-Medium" family="Avenir Next" pointSize="16"/>
+                                        <state key="normal" title="Transaction History">
+                                            <color key="titleColor" red="0.0" green="0.0" blue="0.0" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+                                        </state>
+                                        <connections>
+                                            <action selector="transactionAction:" destination="AaS-13-ZCZ" eventType="touchUpInside" id="CMQ-ds-T5U"/>
+                                        </connections>
+                                    </button>
+                                    <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="aND-Kt-Igk">
+                                        <rect key="frame" x="187.5" y="0.0" width="187.5" height="34"/>
+                                        <fontDescription key="fontDescription" name="AvenirNext-Medium" family="Avenir Next" pointSize="16"/>
+                                        <state key="normal" title="Tokens Overview">
+                                            <color key="titleColor" red="0.0" green="0.0" blue="0.0" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+                                        </state>
+                                        <state key="disabled" title="Tokens Overview">
+                                            <color key="titleColor" red="0.52941176470588236" green="0.63137254901960782" blue="0.77254901960784317" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+                                        </state>
+                                        <connections>
+                                            <action selector="tokensAction:" destination="AaS-13-ZCZ" eventType="touchUpInside" id="Iyq-bD-nrZ"/>
+                                        </connections>
+                                    </button>
+                                </subviews>
                                 <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                 <constraints>
+                                    <constraint firstItem="AAl-uK-hk4" firstAttribute="leading" secondItem="jUF-mM-u86" secondAttribute="leading" id="5QX-mC-ycc"/>
+                                    <constraint firstItem="aND-Kt-Igk" firstAttribute="width" secondItem="AAl-uK-hk4" secondAttribute="width" id="6Oe-yQ-bjL"/>
                                     <constraint firstAttribute="height" constant="30" id="BPX-2X-jtg"/>
+                                    <constraint firstItem="AAl-uK-hk4" firstAttribute="top" secondItem="jUF-mM-u86" secondAttribute="top" id="CTp-eL-ZBx"/>
+                                    <constraint firstAttribute="trailing" secondItem="aND-Kt-Igk" secondAttribute="trailing" id="LV9-Ev-HrE"/>
+                                    <constraint firstItem="AAl-uK-hk4" firstAttribute="width" secondItem="jUF-mM-u86" secondAttribute="width" multiplier="1/2" id="QoK-gv-59O"/>
+                                    <constraint firstItem="aND-Kt-Igk" firstAttribute="top" secondItem="jUF-mM-u86" secondAttribute="top" id="zKi-bc-ppz"/>
                                 </constraints>
                             </view>
                             <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Tap the button to create funds request." textAlignment="center" lineBreakMode="tailTruncation" numberOfLines="0" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="paw-pK-SZo">
@@ -1989,22 +2028,26 @@ By donating you help us to bring blockchain technology one step closer to ordina
                             <constraint firstItem="1Fz-V4-uxe" firstAttribute="top" secondItem="NmL-yQ-47h" secondAttribute="bottom" id="F29-9p-dkL"/>
                             <constraint firstItem="3Yh-8Y-DyC" firstAttribute="top" secondItem="paw-pK-SZo" secondAttribute="bottom" constant="16" id="G8D-0h-lIQ"/>
                             <constraint firstItem="4wt-ap-wVn" firstAttribute="top" secondItem="ej0-MJ-fiE" secondAttribute="top" id="GXY-tp-oMh"/>
+                            <constraint firstItem="mf9-84-q3x" firstAttribute="width" secondItem="NmL-yQ-47h" secondAttribute="width" id="HNc-mL-FIF"/>
                             <constraint firstAttribute="trailing" secondItem="jUF-mM-u86" secondAttribute="trailing" id="Hh9-g9-NSO"/>
+                            <constraint firstItem="NmL-yQ-47h" firstAttribute="width" secondItem="bck-YA-N5l" secondAttribute="width" id="IpO-cF-vyo"/>
                             <constraint firstItem="ej0-MJ-fiE" firstAttribute="leading" relation="greaterThanOrEqual" secondItem="Do2-Kb-s2l" secondAttribute="trailing" constant="6" id="L5v-6o-HKE"/>
                             <constraint firstItem="jUF-mM-u86" firstAttribute="top" secondItem="hcq-Oc-Ccw" secondAttribute="bottom" constant="-80" id="MPi-bU-xrd"/>
                             <constraint firstItem="1Fz-V4-uxe" firstAttribute="leading" secondItem="bck-YA-N5l" secondAttribute="leading" id="OkJ-g8-zrE"/>
                             <constraint firstItem="eaL-Cp-sF0" firstAttribute="leading" secondItem="bck-YA-N5l" secondAttribute="leading" constant="17" id="Pap-lH-upv"/>
                             <constraint firstItem="eaL-Cp-sF0" firstAttribute="top" secondItem="aIK-6b-cVZ" secondAttribute="bottom" constant="13" id="S8M-74-sx8"/>
+                            <constraint firstItem="mf9-84-q3x" firstAttribute="top" secondItem="jUF-mM-u86" secondAttribute="bottom" id="TJT-k0-jLG"/>
                             <constraint firstItem="NmL-yQ-47h" firstAttribute="leading" secondItem="bck-YA-N5l" secondAttribute="leading" id="VI0-Vn-26g"/>
                             <constraint firstAttribute="bottom" secondItem="1Fz-V4-uxe" secondAttribute="bottom" id="Va6-wr-l3c"/>
                             <constraint firstItem="VNx-R4-5av" firstAttribute="top" secondItem="ej0-MJ-fiE" secondAttribute="bottom" id="W0G-lN-a26"/>
                             <constraint firstItem="oUJ-bR-gNX" firstAttribute="top" secondItem="ej0-MJ-fiE" secondAttribute="bottom" id="XAG-tx-fKe"/>
                             <constraint firstItem="1Fz-V4-uxe" firstAttribute="top" secondItem="3Yh-8Y-DyC" secondAttribute="bottom" constant="30" id="XMT-qy-IZh"/>
+                            <constraint firstItem="mf9-84-q3x" firstAttribute="height" secondItem="NmL-yQ-47h" secondAttribute="height" id="ZOw-Hq-YsD"/>
                             <constraint firstItem="ej0-MJ-fiE" firstAttribute="centerX" secondItem="hcq-Oc-Ccw" secondAttribute="centerX" id="beO-6d-zlh"/>
                             <constraint firstAttribute="trailing" secondItem="4wt-ap-wVn" secondAttribute="trailing" constant="17" id="dJ2-6r-LCW"/>
+                            <constraint firstItem="mf9-84-q3x" firstAttribute="leading" secondItem="NmL-yQ-47h" secondAttribute="trailing" id="djz-sQ-qJw"/>
                             <constraint firstItem="hcq-Oc-Ccw" firstAttribute="leading" secondItem="bck-YA-N5l" secondAttribute="leading" id="eQu-cs-IBA"/>
                             <constraint firstItem="paw-pK-SZo" firstAttribute="centerX" secondItem="3Yh-8Y-DyC" secondAttribute="centerX" id="iPd-6i-bXl"/>
-                            <constraint firstAttribute="trailing" secondItem="NmL-yQ-47h" secondAttribute="trailing" id="jJP-4j-Rto"/>
                             <constraint firstAttribute="trailing" secondItem="04H-ww-PBS" secondAttribute="trailing" id="kG9-Cn-Syd"/>
                             <constraint firstItem="VNx-R4-5av" firstAttribute="centerX" secondItem="hcq-Oc-Ccw" secondAttribute="centerX" id="kkY-tJ-RA5"/>
                             <constraint firstItem="oUJ-bR-gNX" firstAttribute="leading" secondItem="bck-YA-N5l" secondAttribute="leading" id="n6a-io-Ige"/>
@@ -2027,15 +2070,19 @@ By donating you help us to bring blockchain technology one step closer to ordina
                         <outlet property="customHeader" destination="jUF-mM-u86" id="SWJ-PL-LWd"/>
                         <outlet property="emptyArrowImg" destination="3Yh-8Y-DyC" id="vgL-cp-8kK"/>
                         <outlet property="emptySecondLbl" destination="paw-pK-SZo" id="wS8-p9-QMx"/>
+                        <outlet property="leftTableConstraint" destination="VI0-Vn-26g" id="z4R-XE-ilw"/>
                         <outlet property="spiner" destination="VNx-R4-5av" id="UAO-ol-pyf"/>
                         <outlet property="tableView" destination="NmL-yQ-47h" id="uNo-u4-lrK"/>
                         <outlet property="titleLbl" destination="ej0-MJ-fiE" id="FvS-eB-TGB"/>
+                        <outlet property="tokenBtn" destination="aND-Kt-Igk" id="M1A-Lz-VML"/>
+                        <outlet property="tokensTable" destination="mf9-84-q3x" id="YDK-zu-jyH"/>
+                        <outlet property="transactionBtn" destination="AAl-uK-hk4" id="x7D-KG-b93"/>
                         <segue destination="CB9-uM-FAg" kind="show" identifier="settingsVC" id="pNd-qC-tRx"/>
                     </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="fTf-vK-Yqe" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="-345" y="-340"/>
+            <point key="canvasLocation" x="-346.39999999999998" y="-340.47976011994007"/>
         </scene>
     </scenes>
     <resources>

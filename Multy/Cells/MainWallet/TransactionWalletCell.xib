@@ -64,7 +64,7 @@
                             <constraint firstAttribute="height" constant="1" id="7QX-De-rlA"/>
                         </constraints>
                     </view>
-                    <imageView hidden="YES" userInteractionEnabled="NO" alpha="0.29999999999999999" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="combinedShape" translatesAutoresizingMaskIntoConstraints="NO" id="xag-Zn-BqQ">
+                    <imageView userInteractionEnabled="NO" alpha="0.29999999999999999" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="combinedShape" translatesAutoresizingMaskIntoConstraints="NO" id="xag-Zn-BqQ">
                         <rect key="frame" x="20" y="25" width="335" height="40"/>
                     </imageView>
                 </subviews>

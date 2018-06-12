@@ -74,7 +74,7 @@ class BTCWalletViewController: UIViewController, AnalyticsProtocol {
         super.viewDidLoad()
         spiner.isHidden = true
         spiner.stopAnimating()
-        loader.show(customTitle: localize(string: Constants.updatingString))
+        loader.show(customTitle: Constants.updatingString)
         view.addSubview(loader)
         loader.hide()
         self.swipeToBack()

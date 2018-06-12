@@ -585,6 +585,13 @@
                                                     <rect key="frame" x="0.0" y="0.0" width="375" height="63.5"/>
                                                     <autoresizingMask key="autoresizingMask"/>
                                                     <subviews>
+                                                        <imageView hidden="YES" userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="nameFree" translatesAutoresizingMaskIntoConstraints="NO" id="dzj-ci-D3Z">
+                                                            <rect key="frame" x="341" y="21" width="22" height="22"/>
+                                                            <constraints>
+                                                                <constraint firstAttribute="height" constant="22" id="5Ls-kw-EX0"/>
+                                                                <constraint firstAttribute="width" constant="22" id="dTJ-YD-hLh"/>
+                                                            </constraints>
+                                                        </imageView>
                                                         <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Wallet Name" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="TIE-mG-uUa">
                                                             <rect key="frame" x="20" y="11" width="72.5" height="16.5"/>
                                                             <fontDescription key="fontDescription" name="AvenirNext-DemiBold" family="Avenir Next" pointSize="12"/>
@@ -607,17 +614,27 @@
                                                                 <constraint firstAttribute="height" constant="0.5" id="ah3-uc-gaN"/>
                                                             </constraints>
                                                         </view>
+                                                        <label hidden="YES" opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" misplaced="YES" text="Label" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="sT0-tW-GWx">
+                                                            <rect key="frame" x="252" y="22" width="31" height="17"/>
+                                                            <fontDescription key="fontDescription" name="AvenirNext-Regular" family="Avenir Next" pointSize="12"/>
+                                                            <color key="textColor" red="0.48627450980392156" green="0.83529411764705885" blue="0.0" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+                                                            <nil key="highlightedColor"/>
+                                                        </label>
                                                     </subviews>
                                                     <constraints>
                                                         <constraint firstItem="yYM-Z4-2M4" firstAttribute="bottom" secondItem="5my-it-s2z" secondAttribute="bottomMargin" id="1JO-S2-Hh3"/>
+                                                        <constraint firstItem="dzj-ci-D3Z" firstAttribute="centerY" secondItem="5my-it-s2z" secondAttribute="centerY" id="8uF-dJ-4Ho"/>
                                                         <constraint firstItem="yYM-Z4-2M4" firstAttribute="leading" secondItem="TIE-mG-uUa" secondAttribute="leading" id="AE6-8H-hDf"/>
+                                                        <constraint firstAttribute="trailing" secondItem="dzj-ci-D3Z" secondAttribute="trailing" constant="12" id="CZh-AR-nxN"/>
                                                         <constraint firstAttribute="trailing" secondItem="i21-QL-5OE" secondAttribute="trailing" id="J2F-yh-ZA2"/>
                                                         <constraint firstAttribute="trailing" relation="greaterThanOrEqual" secondItem="TIE-mG-uUa" secondAttribute="trailing" constant="20" symbolic="YES" id="Qbd-d5-Exg"/>
+                                                        <constraint firstItem="dzj-ci-D3Z" firstAttribute="leading" secondItem="sT0-tW-GWx" secondAttribute="trailing" constant="8" id="ZAS-5J-tx0"/>
                                                         <constraint firstAttribute="trailingMargin" secondItem="yYM-Z4-2M4" secondAttribute="trailing" id="dlJ-Cu-WrW"/>
                                                         <constraint firstItem="i21-QL-5OE" firstAttribute="top" secondItem="5my-it-s2z" secondAttribute="top" id="kXP-94-8a7"/>
                                                         <constraint firstItem="yYM-Z4-2M4" firstAttribute="top" secondItem="TIE-mG-uUa" secondAttribute="bottom" constant="2" id="oyf-rA-71b"/>
                                                         <constraint firstItem="TIE-mG-uUa" firstAttribute="leading" secondItem="5my-it-s2z" secondAttribute="leading" constant="20" id="p1O-80-xDC"/>
                                                         <constraint firstItem="i21-QL-5OE" firstAttribute="leading" secondItem="5my-it-s2z" secondAttribute="leading" id="sHc-Pu-Ygp"/>
+                                                        <constraint firstItem="sT0-tW-GWx" firstAttribute="centerY" secondItem="dzj-ci-D3Z" secondAttribute="centerY" id="tNa-TS-0m2"/>
                                                     </constraints>
                                                 </tableViewCellContentView>
                                                 <connections>
@@ -2707,6 +2724,7 @@ correctly</string>
         <image name="fastScan" width="83" height="83"/>
         <image name="fastSend" width="83" height="83"/>
         <image name="invalidName" width="9" height="36"/>
+        <image name="nameFree" width="22" height="22"/>
         <image name="noInternetConnection" width="123" height="104"/>
         <image name="settingsAbout" width="37" height="37"/>
         <image name="settingsAboutGrey" width="31" height="31"/>

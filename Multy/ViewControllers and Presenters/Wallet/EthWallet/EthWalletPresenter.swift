@@ -64,6 +64,9 @@ class EthWalletPresenter: NSObject {
         
         let headerCollectionCell = UINib.init(nibName: "EthWalletHeaderCollectionViewCell", bundle: nil)
         self.mainVC?.collectionView.register(headerCollectionCell, forCellWithReuseIdentifier: "MainWalletCollectionViewCellID")
+        
+        let tokenTableViewCell = UINib.init(nibName: "TokenTableViewCell", bundle: nil)
+        self.mainVC?.tokensTable.register(tokenTableViewCell, forCellReuseIdentifier: "tokenCell")
     }
     
     func fixConstraints() {
@@ -132,6 +135,83 @@ class EthWalletPresenter: NSObject {
                     self.mainVC!.isSocketInitiateUpdating = false
                 }
             }
+        }
+    }
+    
+    // TABLE
+    func makeCellFor(tableView: UITableView, indexPath: IndexPath) -> UITableViewCell {
+        if tableView.isEqual(mainVC?.tableView) {
+            let countOfHistObjs = numberOfTransactions()
+            
+            if indexPath.row < countOfHistObjs && isTherePendingMoney(for: indexPath) {
+                let pendingTrasactionCell = tableView.dequeueReusableCell(withIdentifier: "TransactionPendingCellID") as! TransactionPendingCell
+                pendingTrasactionCell.selectionStyle = .none
+                pendingTrasactionCell.histObj = historyArray[indexPath.row]
+                pendingTrasactionCell.wallet = wallet
+                pendingTrasactionCell.fillCell()
+                
+                return pendingTrasactionCell
+            } else {
+                let transactionCell = self.mainVC!.tableView.dequeueReusableCell(withIdentifier: "TransactionWalletCellID") as! TransactionWalletCell
+                transactionCell.selectionStyle = .none
+                if countOfHistObjs > 0 {
+                    if indexPath.row >= countOfHistObjs {
+                        transactionCell.changeState(isEmpty: true)
+                    } else {
+                        transactionCell.histObj = historyArray[indexPath.row]
+                        transactionCell.wallet = wallet!
+                        transactionCell.fillCell()
+                        transactionCell.changeState(isEmpty: false)
+                        self.mainVC?.hideEmptyLbls()
+                        if indexPath.row != 1 {
+                            transactionCell.changeTopConstraint()
+                        }
+                    }
+                } else {
+                    transactionCell.changeState(isEmpty: true)
+                    self.mainVC?.fixForiPad()
+                }
+                
+                return transactionCell
+            }
+        } else { // if if tableView.isEqual(mainVC?.tokensTable) {
+            let tokenCell = tableView.dequeueReusableCell(withIdentifier: "tokenCell") as! TokenTableViewCell
+            
+            return tokenCell
+        }
+    }
+    
+    func makeHeightForCellIn(tableView: UITableView, indexPath: IndexPath) -> CGFloat {
+        if tableView.isEqual(mainVC?.tableView) {
+            if indexPath.row < numberOfTransactions() && isTherePendingMoney(for: indexPath) { // <= since we begins from 1
+                return 135
+            } else {
+                return 70
+            }
+        } else { // if if tableView.isEqual(mainVC?.tokensTable) {
+            return 70
+        }
+    }
+    
+    func makeNumberOfRowIn(tableView: UITableView) -> Int {
+        if tableView.isEqual(mainVC?.tableView) {
+            let countOfHistObjects = numberOfTransactions()
+            if countOfHistObjects > 0 {
+                mainVC?.tableView.isScrollEnabled = true
+                if countOfHistObjects < 10 {
+                    return 10
+                } else {
+                    return countOfHistObjects
+                }
+            } else {
+                if screenHeight == heightOfX {
+                    return 13
+                }
+                return 10
+            }
+        } else { // if if tableView.isEqual(mainVC?.tokensTable) {
+            //FIX IT: return number of tokens in wallet
+            return 9
         }
     }
 }

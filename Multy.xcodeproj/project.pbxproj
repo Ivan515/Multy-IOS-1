@@ -213,6 +213,8 @@
 		45E215E01FD164F80078945A /* QrScannerPresenter.swift in Sources */ = {isa = PBXBuildFile; fileRef = 45E215DF1FD164F80078945A /* QrScannerPresenter.swift */; };
 		45E215E21FD16AA70078945A /* GoToQrProtocol.swift in Sources */ = {isa = PBXBuildFile; fileRef = 45E215E11FD16AA70078945A /* GoToQrProtocol.swift */; };
 		45E215E41FD179100078945A /* QrDataProtocol.swift in Sources */ = {isa = PBXBuildFile; fileRef = 45E215E31FD179100078945A /* QrDataProtocol.swift */; };
+		45E293A820CAD18500668FF0 /* TokenTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 45E293A620CAD18500668FF0 /* TokenTableViewCell.swift */; };
+		45E293A920CAD18500668FF0 /* TokenTableViewCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = 45E293A720CAD18500668FF0 /* TokenTableViewCell.xib */; };
 		45E7A8A620065455005D2D6E /* StockExchanges.swift in Sources */ = {isa = PBXBuildFile; fileRef = 45E7A8A520065455005D2D6E /* StockExchanges.swift */; };
 		45EBB6A8200D312700F81322 /* GoogleService-Info.plist in Resources */ = {isa = PBXBuildFile; fileRef = 45EBB6A7200D312700F81322 /* GoogleService-Info.plist */; };
 		45ECDBD7203D9E77009FD339 /* LICENSE in Resources */ = {isa = PBXBuildFile; fileRef = 45ECDBD5203D9E77009FD339 /* LICENSE */; };
@@ -616,6 +618,8 @@
 		45E215DF1FD164F80078945A /* QrScannerPresenter.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = QrScannerPresenter.swift; sourceTree = "<group>"; };
 		45E215E11FD16AA70078945A /* GoToQrProtocol.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GoToQrProtocol.swift; sourceTree = "<group>"; };
 		45E215E31FD179100078945A /* QrDataProtocol.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = QrDataProtocol.swift; sourceTree = "<group>"; };
+		45E293A620CAD18500668FF0 /* TokenTableViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TokenTableViewCell.swift; sourceTree = "<group>"; };
+		45E293A720CAD18500668FF0 /* TokenTableViewCell.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = TokenTableViewCell.xib; sourceTree = "<group>"; };
 		45E7A8A520065455005D2D6E /* StockExchanges.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StockExchanges.swift; sourceTree = "<group>"; };
 		45EBB6A7200D312700F81322 /* GoogleService-Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = "GoogleService-Info.plist"; sourceTree = "<group>"; };
 		45ECDBD5203D9E77009FD339 /* LICENSE */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = LICENSE; sourceTree = "<group>"; };
@@ -1480,6 +1484,7 @@
 		45B9CB041FBB4B6600AA2A31 /* Cells */ = {
 			isa = PBXGroup;
 			children = (
+				45E293A520CAD15E00668FF0 /* TokenCell */,
 				85DE62E520AC1CD000423D89 /* ActiveRequestCVC */,
 				85DE62E020AB074100423D89 /* WalletCVC */,
 				45DCF9CA1FE13991005A9896 /* AddressCell */,
@@ -1594,6 +1599,15 @@
 				45E215DF1FD164F80078945A /* QrScannerPresenter.swift */,
 			);
 			path = Camera;
+			sourceTree = "<group>";
+		};
+		45E293A520CAD15E00668FF0 /* TokenCell */ = {
+			isa = PBXGroup;
+			children = (
+				45E293A620CAD18500668FF0 /* TokenTableViewCell.swift */,
+				45E293A720CAD18500668FF0 /* TokenTableViewCell.xib */,
+			);
+			path = TokenCell;
 			sourceTree = "<group>";
 		};
 		45ECDBD4203D9E50009FD339 /* LoggingPrint */ = {
@@ -2015,6 +2029,7 @@
 				445B127020BC1BA800FD0D33 /* SeedPhrase.storyboard in Resources */,
 				4477262420BE9F53006BF4A7 /* NewWalletTableViewCell.xib in Resources */,
 				445B12E020BD78D000FD0D33 /* CurrencyChooser.strings in Resources */,
+				45E293A920CAD18500668FF0 /* TokenTableViewCell.xib in Resources */,
 				45EBB6A8200D312700F81322 /* GoogleService-Info.plist in Resources */,
 				45AC16292048214C00E75BD6 /* CurrencyTableViewCell.xib in Resources */,
 				4430569B20C1627600E5415A /* TransactionPendingCell.xib in Resources */,
@@ -2431,6 +2446,7 @@
 				FA4D43E11FC5895D003C7117 /* String+Extension.swift in Sources */,
 				4558F41920C03F87003D7C7A /* PreloaderView.swift in Sources */,
 				45A949271FC2EE68003C3A23 /* ReceiveAmountViewController.swift in Sources */,
+				45E293A820CAD18500668FF0 /* TokenTableViewCell.swift in Sources */,
 				454094502033236B00603DB5 /* ResetAllDataViewController.swift in Sources */,
 				444B3B652045723C008129B8 /* BigInt+Extension.swift in Sources */,
 				45498F952061698800130B94 /* CurrencyExchangeRLM.swift in Sources */,

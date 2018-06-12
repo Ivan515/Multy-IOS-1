@@ -29,6 +29,12 @@ class EthWalletViewController: UIViewController, AnalyticsProtocol, CancelProtoc
     @IBOutlet weak var backImage: UIImageView!
     @IBOutlet weak var spiner: UIActivityIndicatorView!
     
+    @IBOutlet weak var transactionBtn: UIButton!
+    @IBOutlet weak var tokenBtn: UIButton!
+    @IBOutlet weak var tokensTable: UITableView!
+    
+    @IBOutlet weak var leftTableConstraint: NSLayoutConstraint!
+    
     var presenter = EthWalletPresenter()
     
     var isBackupOnScreen = true
@@ -55,6 +61,8 @@ class EthWalletViewController: UIViewController, AnalyticsProtocol, CancelProtoc
     var isCanUpdate = true
     var isTableOnTop = false
     
+    var isHistory = true
+    
     lazy var refreshControl: UIRefreshControl = {
         let refreshControl = UIRefreshControl()
         refreshControl.addTarget(self, action: #selector(self.handleRefresh(_:)), for: UIControlEvents.valueChanged)
@@ -65,13 +73,14 @@ class EthWalletViewController: UIViewController, AnalyticsProtocol, CancelProtoc
     override func viewDidLoad() {
         super.viewDidLoad()
         spiner.stopAnimating()
-        loader.show(customTitle: localize(string: Constants.gettingWalletString))
+        loader.show(customTitle: Constants.gettingWalletString)
         self.view.addSubview(loader)
         loader.hide()
         self.swipeToBack()
         presenter.mainVC = self
         presenter.fixConstraints()
         presenter.registerCells()
+        setupBtns()
 
         NotificationCenter.default.addObserver(self, selector: #selector(self.updateExchange), name: NSNotification.Name("exchageUpdated"), object: nil)
         NotificationCenter.default.addObserver(self, selector: #selector(self.updateWalletAfterSockets), name: NSNotification.Name("transactionUpdated"), object: nil)
@@ -117,13 +126,47 @@ class EthWalletViewController: UIViewController, AnalyticsProtocol, CancelProtoc
         setupUI()
     }
     
+    func setupBtns() {
+        // check tokens here (set hiden if empty)
+        if isHistory {
+            transactionBtn.setTitleColor(#colorLiteral(red: 0, green: 0, blue: 0, alpha: 1), for: .normal)
+            tokenBtn.setTitleColor(#colorLiteral(red: 0.5294117647, green: 0.631372549, blue: 0.7725490196, alpha: 1), for: .normal)
+        } else {
+            transactionBtn.setTitleColor(#colorLiteral(red: 0.5294117647, green: 0.631372549, blue: 0.7725490196, alpha: 1), for: .normal)
+            tokenBtn.setTitleColor(#colorLiteral(red: 0, green: 0, blue: 0, alpha: 1), for: .normal)
+        }
+    }
+    
+    @IBAction func transactionAction(_ sender: Any) {
+        isHistory = true
+        setupBtns()
+        self.leftTableConstraint.constant = 0
+        UIView.animate(withDuration: 0.2) {
+            self.view.layoutIfNeeded()
+        }
+    }
+    
+    @IBAction func tokensAction(_ sender: Any) {
+//        DispatchQueue.main.async {
+        //                self.tableView.frame.origin.x = -screenWidth
+        
+        //                self.tokensTable.frame.origin.x = 0
+        self.isHistory = false
+        self.setupBtns()
+        self.leftTableConstraint.constant = -screenWidth
+        UIView.animate(withDuration: 0.2) {
+            self.view.layoutIfNeeded()
+        }
+    }
+    
     
     func setupUI() {
         let gestureRecognizer = UIPanGestureRecognizer(target: self, action: #selector(changeTableY))
         let gestureRecognizer2 = UIPanGestureRecognizer(target: self, action: #selector(changeTableY))
-        if self.tableView.gestureRecognizers?.count == 5 {
+        if self.tableView.gestureRecognizers?.count == 5 && tokensTable.gestureRecognizers?.count == 5 {
             self.tableView.addGestureRecognizer(gestureRecognizer)
             self.customHeader.addGestureRecognizer(gestureRecognizer2)
+            self.tokensTable.addGestureRecognizer(gestureRecognizer)
             self.recog = gestureRecognizer
         }
         
@@ -135,21 +178,25 @@ class EthWalletViewController: UIViewController, AnalyticsProtocol, CancelProtoc
         
         self.tableView.isScrollEnabled = false
         self.tableView.bounces = true
-        self.collectionView.backgroundColor = .clear
         self.tableView.backgroundColor = .white
+        self.tokensTable.isScrollEnabled = false
+        self.tokensTable.bounces = true
+        self.tokensTable.backgroundColor = .white
+        self.collectionView.backgroundColor = .clear
         makeConstantsForAnimation()
     }
     
     @objc func setTableToBot(duration: Double) {
+        let tableView = isHistory ? self.tableView! : self.tokensTable!
         UIView.animate(withDuration: duration) {
             self.customHeader.frame.origin.y = self.startY - 30
             self.backupView?.frame.origin.y = self.startY - 50
-            self.tableView.frame.origin.y = self.startY
-            self.tableView.frame.size.height = self.startHeight
-            self.tableView.scrollToTop()
-            self.tableView.isScrollEnabled = false
+            tableView.frame.origin.y = self.startY
+            tableView.frame.size.height = self.startHeight
+            tableView.scrollToTop()
+            tableView.isScrollEnabled = false
             self.collectionView.frame.origin.y = self.collectionStartY
-            self.checkrecogOnTable()
+            self.checkrecogOnTable(table: tableView)
             self.isCanUpdate = true
             self.spiner.stopAnimating()
             self.spiner.isHidden = true
@@ -158,16 +205,25 @@ class EthWalletViewController: UIViewController, AnalyticsProtocol, CancelProtoc
     }
     
     @objc func setTableToTop() {
+        let tableView = isHistory ? self.tableView! : self.tokensTable!
         UIView.animate(withDuration: 0.1) {
             self.customHeader.frame.origin.y = self.headerTopY
             self.backupView?.frame.origin.y = self.backupTopY
-            self.tableView.frame.size.height = self.view.frame.height - self.headerTopY - self.bottomView.frame.height - 30
-            self.tableView.frame.origin.y = self.tableTopY
-            self.tableView.isScrollEnabled = true
-            self.tableView.removeGestureRecognizer(self.recog!)
+            tableView.frame.size.height = self.view.frame.height - self.headerTopY - self.bottomView.frame.height - 30
+            tableView.frame.origin.y = self.tableTopY
+            tableView.isScrollEnabled = true
+            self.removeRecognizer(table: tableView)
             self.spiner.stopAnimating()
             self.spiner.isHidden = true
             self.isTableOnTop = true
+        }
+    }
+    
+    func removeRecognizer(table: UITableView) {
+        for recognizer in table.gestureRecognizers! {
+            if recognizer == recog {
+                table.removeGestureRecognizer(recognizer)
+            }
         }
     }
     
@@ -183,13 +239,14 @@ class EthWalletViewController: UIViewController, AnalyticsProtocol, CancelProtoc
             tableTopY = 110
         }
         if presenter.isTherePendingAmount && self.customHeader.frame.origin.y != self.headerTopY  {
+            let tableView = isHistory ? self.tableView! : self.tokensTable!
             UIView.animate(withDuration: 0.2) {
                 self.backImage.frame.size.height = 402
                 self.collectionView.frame.size.height = 240
                 self.collectionView.frame.origin.y = self.collectionStartY
-                self.tableView.frame.origin.y = self.backImage.frame.size.height + 10
-                self.customHeader.frame.origin.y = self.tableView.frame.origin.y - 30
-                self.tableView.frame.size.height = screenHeight - self.tableView.frame.origin.y //- self.bottomView.frame.height
+                tableView.frame.origin.y = self.backImage.frame.size.height + 10
+                self.customHeader.frame.origin.y = tableView.frame.origin.y - 30
+                tableView.frame.size.height = screenHeight - tableView.frame.origin.y //- self.bottomView.frame.height
                 self.changeBackupY()
             }
             self.setTableToBot(duration: 0.2)
@@ -198,7 +255,7 @@ class EthWalletViewController: UIViewController, AnalyticsProtocol, CancelProtoc
         }
         self.fixForX()
         self.startY = self.backImage.frame.height - 50
-        self.startHeight = self.tableView.frame.size.height
+        self.startHeight = tableView.frame.size.height
     }
     
     func changeBackupY() {
@@ -207,9 +264,9 @@ class EthWalletViewController: UIViewController, AnalyticsProtocol, CancelProtoc
         }
     }
     
-    func checkrecogOnTable() {
-        if !self.tableView.gestureRecognizers!.contains(recog!) {
-            self.tableView.addGestureRecognizer(recog!)
+    func checkrecogOnTable(table: UITableView) {
+        if !table.gestureRecognizers!.contains(recog!) && table.gestureRecognizers!.count < 6 {
+            table.addGestureRecognizer(recog!)
         }
     }
     
@@ -234,8 +291,7 @@ class EthWalletViewController: UIViewController, AnalyticsProtocol, CancelProtoc
     }
     
     @objc func updateExchange() {
-        let firstCell = self.tableView.cellForRow(at: [0,0]) as? BTCWalletHeaderTableViewCell
-        firstCell?.updateUI()
+        self.collectionView.reloadData()
     }
     
     func updateHistory() {
@@ -313,6 +369,12 @@ class EthWalletViewController: UIViewController, AnalyticsProtocol, CancelProtoc
     }
     
     @IBAction func closeAction() {
+        if isHistory == false {
+            self.leftTableConstraint.constant = 0
+            UIView.animate(withDuration: 0.2) {
+                self.view.layoutIfNeeded()
+            }
+        }
         sendAnalyticsEvent(screenName: "\(screenWalletWithChain)\(presenter.wallet!.chain)", eventName: closeTap)
         self.navigationController?.popToRootViewController(animated: true)
     }
@@ -428,58 +490,11 @@ extension EthWalletViewController: UITableViewDelegate, UITableViewDataSource {
     }
     
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        //check number of transactions
-        // else return some empty cells
-        let countOfHistObjects = self.presenter.numberOfTransactions()
-        if countOfHistObjects > 0 {
-            self.tableView.isScrollEnabled = true
-            if countOfHistObjects < 10 {
-                return 10
-            } else {
-                return countOfHistObjects
-            }
-        } else {
-            if screenHeight == heightOfX {
-                return 13
-            }
-            return 10
-        }
+        return presenter.makeNumberOfRowIn(tableView: tableView)
     }
     
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
-        let countOfHistObjs = self.presenter.numberOfTransactions()
-        
-        if indexPath.row < countOfHistObjs && presenter.isTherePendingMoney(for: indexPath) {
-            let pendingTrasactionCell = tableView.dequeueReusableCell(withIdentifier: "TransactionPendingCellID") as! TransactionPendingCell
-            pendingTrasactionCell.selectionStyle = .none
-            pendingTrasactionCell.histObj = presenter.historyArray[indexPath.row]
-            pendingTrasactionCell.wallet = presenter.wallet
-            pendingTrasactionCell.fillCell()
-            
-            return pendingTrasactionCell
-        } else {
-            let transactionCell = self.tableView.dequeueReusableCell(withIdentifier: "TransactionWalletCellID") as! TransactionWalletCell
-            transactionCell.selectionStyle = .none
-            if countOfHistObjs > 0 {
-                if indexPath.row >= countOfHistObjs {
-                    transactionCell.changeState(isEmpty: true)
-                } else {
-                    transactionCell.histObj = presenter.historyArray[indexPath.row]
-                    transactionCell.wallet = presenter.wallet!
-                    transactionCell.fillCell()
-                    transactionCell.changeState(isEmpty: false)
-                    self.hideEmptyLbls()
-                    if indexPath.row != 1 {
-                        transactionCell.changeTopConstraint()
-                    }
-                }
-            } else {
-                transactionCell.changeState(isEmpty: true)
-                fixForiPad()
-            }
-            
-            return transactionCell
-        }
+        return self.presenter.makeCellFor(tableView: tableView, indexPath: indexPath)
     }
     
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
@@ -501,11 +516,7 @@ extension EthWalletViewController: UITableViewDelegate, UITableViewDataSource {
     }
     
     func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
-        if indexPath.row < presenter.numberOfTransactions() && presenter.isTherePendingMoney(for: indexPath) { // <= since we begins from 1
-            return 135
-        } else {
-            return 70
-        }
+        return presenter.makeHeightForCellIn(tableView: tableView, indexPath: indexPath)
     }
     
     func tableView(_ tableView: UITableView, willDisplay cell: UITableViewCell, forRowAt indexPath: IndexPath) {
@@ -515,6 +526,7 @@ extension EthWalletViewController: UITableViewDelegate, UITableViewDataSource {
     }
     
     @IBAction func changeTableY(_ gestureRecognizer: UIPanGestureRecognizer) {
+        let tableView = isHistory ? self.tableView! : self.tokensTable!
         let translation = gestureRecognizer.translation(in: self.view)
         if isTableOnTop && translation.y < 0 {
             return
@@ -525,7 +537,7 @@ extension EthWalletViewController: UITableViewDelegate, UITableViewDataSource {
             } else {
                 self.setTableToTop()
                 if self.presenter.numberOfTransactions() > 5 {
-                    self.tableView.removeGestureRecognizer(recog!)
+                    tableView.removeGestureRecognizer(recog!)
                 } else {
                     return
                 }
@@ -533,7 +545,7 @@ extension EthWalletViewController: UITableViewDelegate, UITableViewDataSource {
         }
         
         if gestureRecognizer.state == .began || gestureRecognizer.state == .changed {
-            if translation.y > 0 && self.tableView.frame.origin.y > self.startY {
+            if translation.y > 0 && tableView.frame.origin.y > self.startY {
                 UIView.animate(withDuration: 0.2, delay: 0.1, usingSpringWithDamping: 0.7, initialSpringVelocity: 0.1, options: .curveEaseIn, animations: {
                     if self.spiner.isAnimating == false {
                         self.spiner.isHidden = false
@@ -541,14 +553,14 @@ extension EthWalletViewController: UITableViewDelegate, UITableViewDataSource {
                     }
                     var transY = translation.y > 200 ? translation.y : translation.y/2
                     transY = transY > 250 ? transY : transY/2
-                    self.tableView.frame.size.height = self.tableView.frame.size.height - transY
-                    self.tableView.center = CGPoint(x: self.view.center.x, y: self.tableView.center.y + transY)
+                    tableView.frame.size.height = tableView.frame.size.height - transY
+                    tableView.center = CGPoint(x: self.view.center.x, y: tableView.center.y + transY)
                     gestureRecognizer.setTranslation(CGPoint.zero, in: self.view)
-                    self.backupView?.frame.origin.y = self.tableView.frame.origin.y - 50
-                    self.customHeader.frame.origin.y = self.tableView.frame.origin.y - 30
+                    self.backupView?.frame.origin.y = tableView.frame.origin.y - 50
+                    self.customHeader.frame.origin.y = tableView.frame.origin.y - 30
                     self.collectionView.frame.origin.y = self.customHeader.frame.origin.y - self.collectionView.frame.height - 10
-                    if self.tableView.frame.origin.y > (self.startY + self.tableTopY) / 2 {
-                        if self.tableView.frame.origin.y > screenHeight/2 - 20 {
+                    if tableView.frame.origin.y > (self.startY + self.tableTopY) / 2 {
+                        if tableView.frame.origin.y > screenHeight/2 - 20 {
                             self.updateByPull()
                             self.isCanUpdate = false
                         }
@@ -558,11 +570,11 @@ extension EthWalletViewController: UITableViewDelegate, UITableViewDataSource {
                 }
             } else {
                 tableView.frame.size.height = tableView.frame.size.height - translation.y
-                tableView.center = CGPoint(x: self.view.center.x, y: self.tableView.center.y + translation.y)
+                tableView.center = CGPoint(x: self.view.center.x, y: tableView.center.y + translation.y)
                 gestureRecognizer.setTranslation(CGPoint.zero, in: self.view)
-                self.backupView?.frame.origin.y = self.tableView.frame.origin.y - 50
-                self.customHeader.frame.origin.y = self.tableView.frame.origin.y - 30
-                if self.tableView.frame.origin.y > startY + 10 {
+                self.backupView?.frame.origin.y = tableView.frame.origin.y - 50
+                self.customHeader.frame.origin.y = tableView.frame.origin.y - 30
+                if tableView.frame.origin.y > startY + 10 {
                     self.collectionView.frame.origin.y = self.customHeader.frame.origin.y - self.collectionView.frame.height - 10
                 }
             }
@@ -570,7 +582,7 @@ extension EthWalletViewController: UITableViewDelegate, UITableViewDataSource {
         
         //auto animation for go to top or bottom
         if gestureRecognizer.state == .ended {
-            if self.tableView.frame.origin.y > (startY + tableTopY) / 2 {
+            if tableView.frame.origin.y > (startY + tableTopY) / 2 {
                 self.setTableToBot(duration: 0.5)
             } else {
                 self.setTableToTop()
