@@ -50,6 +50,7 @@ class UserWalletRLM: Object {
                 return sumInCrypto.fixedFraction(digits: 8)
             case BLOCKCHAIN_ETHEREUM:
                 return allETHBalance.cryptoValueString(for: BLOCKCHAIN_ETHEREUM)
+//                return ethWallet!.pendingBalance.cryptoValueString(for: BLOCKCHAIN_ETHEREUM)
             default:
                 return ""
             }
@@ -529,7 +530,15 @@ extension ETHWalletRLM {
                 return BigInt.zero()
             }
             
-            return isTherePendingTx.boolValue ? ethWallet!.pendingBalance : ethWallet!.ethBalance
+            if isTherePendingTx.boolValue {
+                return ethWallet!.pendingBalance
+            } else {
+                return ethWallet!.ethBalance
+            }
+            
+//            return availableBalance
+            
+//            return isTherePendingTx.boolValue ? ethWallet!.pendingBalance : ethWallet!.ethBalance
         }
     }
     
@@ -539,7 +548,14 @@ extension ETHWalletRLM {
                 return BigInt.zero()
             }
             
-            return isTherePendingTx.boolValue ? (ethWallet!.ethBalance < ethWallet!.pendingBalance ? ethWallet!.ethBalance : BigInt.zero()) : ethWallet!.ethBalance
+            if isTherePendingTx.boolValue {
+//                return ethWallet!.balance
+                return ethWallet!.ethBalance
+            } else {
+                return ethWallet!.pendingBalance > Int64(0) ? ethWallet!.pendingBalance : ethWallet!.ethBalance
+            }
+            
+//            return isTherePendingTx.boolValue ? (ethWallet!.ethBalance < ethWallet!.pendingBalance ? ethWallet!.ethBalance : BigInt.zero()) : ethWallet!.ethBalance
         }
     }
 }
@@ -574,9 +590,9 @@ extension WalletUpdateRLM {
         if let pendingBalance = infoDict["pendingbalance"] as? String {
             ethWallet!.pendingWeiAmountString = pendingBalance
             
-            if ethWallet!.pendingWeiAmountString != "0" {
-                isTherePendingTx = NSNumber(booleanLiteral: true)
-            }
+//            if ethWallet!.pendingWeiAmountString != "0" {
+//                isTherePendingTx = NSNumber(booleanLiteral: true)
+//            }
         }
     }
 }
