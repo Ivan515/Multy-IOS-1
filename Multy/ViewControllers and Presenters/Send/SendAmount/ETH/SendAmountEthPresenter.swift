@@ -33,7 +33,10 @@ class SendAmountEthPresenter: NSObject {
             
             maxLengthForSum = transactionDTO.choosenWallet!.blockchainType.blockchain.maxLengthForSum
             maxPrecision = transactionDTO.choosenWallet!.blockchainType.blockchain.maxPrecision
-        }
+            
+            sumInCrypto = transactionDTO.sendAmount != nil ? Constants.BigIntSwift.oneETHInWeiKey * transactionDTO.sendAmount : BigInt.zero()
+            setAmountFromQr()
+        } 
     }
     
     var availableWalletAmount = BigInt.zero()

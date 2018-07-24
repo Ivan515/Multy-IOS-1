@@ -30,3 +30,5 @@
 "NO FUNDS" = "У вас немає доступних засобів";
 "ADD TO CONTACTS" = "Додати в контакт";
 "HOLD ON" = "Зачекайте. Синхронізація гаманця.";
+"INCOMING REJECTED TRANSACTION INFO" = "Відхилена Вхідна Транзакція";
+"OUTCOMING REJECTED TRANSACTION INFO" = "Відхилена Вихідна Транзакція";

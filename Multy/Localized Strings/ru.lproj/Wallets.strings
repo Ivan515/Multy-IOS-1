@@ -30,3 +30,5 @@
 "NO FUNDS" = "У вас нет доступных средств";
 "ADD TO CONTACTS" = "Добавить в контакт";
 "HOLD ON" = "Подождите. Синхронизация кошелька.";
+"INCOMING REJECTED TRANSACTION INFO" = "Отклоненная Входящая Транзакция";
+"OUTCOMING REJECTED TRANSACTION INFO" = "Отклоненная Исходящая Транзакция";

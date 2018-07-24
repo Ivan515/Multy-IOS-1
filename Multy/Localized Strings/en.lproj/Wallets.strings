@@ -30,3 +30,5 @@
 "NO FUNDS" = "You have no available funds";
 "ADD TO CONTACTS" = "Add to Contacts";
 "HOLD ON" = "Hold on. Wallet is resyncing.";
+"INCOMING REJECTED TRANSACTION INFO" = "Rejected Incoming Transaction";
+"OUTCOMING REJECTED TRANSACTION INFO" = "Rejected Outcoming Transaction";

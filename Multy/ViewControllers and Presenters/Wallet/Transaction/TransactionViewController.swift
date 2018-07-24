@@ -58,6 +58,7 @@ class TransactionViewController: UIViewController, UIScrollViewDelegate {
     var fiatName = "USD"
     
     var isIncoming = true
+    var isRejected = false
     
     var isMultisig = false 
     
@@ -67,28 +68,7 @@ class TransactionViewController: UIViewController, UIScrollViewDelegate {
     
     override func viewDidLoad() {
         super.viewDidLoad()
-        self.swipeToBack()
-        self.presenter.transctionVC = self
-        configureCollectionViews()
-        self.tabBarController?.tabBar.isHidden = true
-        self.tabBarController?.tabBar.frame = CGRect(x: 0, y: 0, width: 0, height: 0)
-        self.isIncoming = presenter.histObj.isIncoming()
-        self.checkMultisig()
-        self.checkHeightForScrollAvailability()
-        self.checkStatus()
-        self.constraintDonationHeight.constant = 0
-        self.donationView.isHidden = true
-        self.updateUI()
-        self.sendAnalyticOnStrart()
-        
-        
-        let tapOnTo = UITapGestureRecognizer(target: self, action: #selector(tapOnToAddress))
-        walletToAddressLbl.isUserInteractionEnabled = true
-        walletToAddressLbl.addGestureRecognizer(tapOnTo)
-        
-        let tapOnFrom = UITapGestureRecognizer(target: self, action: #selector(tapOnFromAddress))
-        walletFromAddressLbl.isUserInteractionEnabled = true
-        walletFromAddressLbl.addGestureRecognizer(tapOnFrom)
+        setup()
     }
     
     override func viewWillAppear(_ animated: Bool) {
@@ -117,6 +97,34 @@ class TransactionViewController: UIViewController, UIScrollViewDelegate {
         scrollContentHeightConstraint.constant = contentHeight()
         self.view.layoutIfNeeded()
     }
+    
+    func setup() {
+        self.swipeToBack()
+        self.presenter.transctionVC = self
+        configureCollectionViews()
+        self.tabBarController?.tabBar.isHidden = true
+        self.tabBarController?.tabBar.frame = CGRect(x: 0, y: 0, width: 0, height: 0)
+        self.isIncoming = presenter.histObj.isIncoming()
+        self.isRejected = presenter.histObj.txStatus == 0 ? true : false
+        self.checkMultisig()
+        self.checkHeightForScrollAvailability()
+        self.constraintDonationHeight.constant = 0
+        self.donationView.isHidden = true
+        self.updateUI()
+        self.sendAnalyticOnStrart()
+        
+        presenter.setupUI(isRejected: isRejected, isIncoming: isIncoming)
+        
+        
+        let tapOnTo = UITapGestureRecognizer(target: self, action: #selector(tapOnToAddress))
+        walletToAddressLbl.isUserInteractionEnabled = true
+        walletToAddressLbl.addGestureRecognizer(tapOnTo)
+        
+        let tapOnFrom = UITapGestureRecognizer(target: self, action: #selector(tapOnFromAddress))
+        walletFromAddressLbl.isUserInteractionEnabled = true
+        walletFromAddressLbl.addGestureRecognizer(tapOnFrom)
+    }
+    
     
     func configureCollectionViews() {
         let confirmationStatusNib = UINib(nibName: "ConfirmationStatusCollectionViewCell", bundle: nil)
@@ -193,26 +201,31 @@ class TransactionViewController: UIViewController, UIScrollViewDelegate {
 //        }
     }
     
-    func checkStatus() {
-        if isMultisig && presenter.histObj.isWaitingConfirmation.boolValue {
-            // Multisig transaction waiting confirmation
-            self.makeBackColor(color: self.presenter.waitingConfirmationBackColor)
-            self.titleLbl.text = "Transaction details"
-            self.titleLbl.textColor = .black
-        } else {
-            if isIncoming {  // RECEIVE
-                self.makeBackColor(color: self.presenter.receiveBackColor)
-                self.titleLbl.text = localize(string: Constants.transactionInfoString)
-            } else {                        // SEND
-                self.makeBackColor(color: self.presenter.sendBackColor)
-                self.titleLbl.text = localize(string: Constants.transactionInfoString)
-                self.transactionImg.image = #imageLiteral(resourceName: "sendBigIcon")
-            }
-            self.titleLbl.textColor = .white
-            backImageView.image = UIImage(named: "backWhite")
-        }
-        
-    }
+//    func checkStatus() {
+//        if isMultisig && presenter.histObj.isWaitingConfirmation.boolValue {
+//            // Multisig transaction waiting confirmation
+//            self.makeBackColor(color: self.presenter.waitingConfirmationBackColor)
+//            self.titleLbl.text = "Transaction details"
+//            self.titleLbl.textColor = .black
+//        } else {
+//            if isIncoming == nil {  // RECEIVE
+//                self.makeBackColor(color: self.presenter.receiveBackColor)
+//                self.titleLbl.text = localize(string: Constants.transactionInfoString)
+//            } else if isIncoming == false {                        // SEND
+//                self.makeBackColor(color: self.presenter.sendBackColor)
+//                self.titleLbl.text = localize(string: Constants.transactionInfoString)
+//                self.transactionImg.image = #imageLiteral(resourceName: "sendBigIcon")
+//            } else if isIncoming == true {  //REJECTED
+//                self.makeBackColor(color: self.presenter.rejectedColor)
+//                self.titleLbl.text = localize(string: Constants.transactionInfoString)
+//                self.transactionImg.image = #imageLiteral(resourceName: "warninngBig")
+//                self.viewInBlockchainBtn.setTitle("Resend", for: .normal)
+//            }
+//            self.titleLbl.textColor = .white
+//            backImageView.image = UIImage(named: "backWhite")
+//        }
+//
+//    }
     
     func checkMultisig() {
         isMultisig = presenter.histObj.isMultisigTx.boolValue
@@ -270,7 +283,7 @@ class TransactionViewController: UIViewController, UIScrollViewDelegate {
             let arrOfOutputsAddresses = presenter.histObj.txOutputs.map{ $0.address }.joined(separator: "\n")
             self.walletToAddressLbl.text = arrOfOutputsAddresses
             
-            if isIncoming {
+            if isIncoming == true {
                 self.transctionSumLbl.text = "+\(cryptoSumInBTC.fixedFraction(digits: 8))"
                 self.sumInFiatLbl.text = "+\((cryptoSumInBTC * presenter.histObj.fiatCourseExchange).fixedFraction(digits: 2)) USD"
             } else {
@@ -297,7 +310,7 @@ class TransactionViewController: UIViewController, UIScrollViewDelegate {
             self.walletToAddressLbl.text = presenter.histObj.addressesArray.last
             
             
-            if isIncoming {
+            if isIncoming == true {
                 let fiatAmountInWei = BigInt(presenter.histObj.txOutAmountString) * presenter.histObj.fiatCourseExchange
                 self.transctionSumLbl.text = "+" + BigInt(presenter.histObj.txOutAmountString).cryptoValueString(for: BLOCKCHAIN_ETHEREUM)
                 self.sumInFiatLbl.text = "+" + fiatAmountInWei.fiatValueString(for: BLOCKCHAIN_ETHEREUM) + " USD"
@@ -333,9 +346,16 @@ class TransactionViewController: UIViewController, UIScrollViewDelegate {
     }
     
     @IBAction func viewInBlockchainAction(_ sender: Any) {
-        self.performSegue(withIdentifier: "viewInBlockchain", sender: nil)
-        let blockchainTypeUInt32 = presenter.blockchainType.blockchain.rawValue
-        sendAnalyticsEvent(screenName: "\(screenTransactionWithChain)\(blockchainTypeUInt32)", eventName: "\(viewInBlockchainWithTxStatus)\(blockchainTypeUInt32)_\(state)")
+        if isRejected && !isIncoming {
+            let storyboard = UIStoryboard(name: "Send", bundle: nil)
+            let detailsVC = storyboard.instantiateViewController(withIdentifier: "EthSendDetails") as! EthSendDetailsViewController
+            detailsVC.presenter.transactionDTO = makeResendTransactionDTO()
+            navigationController?.pushViewController(detailsVC, animated: true)
+        } else {
+            self.performSegue(withIdentifier: "viewInBlockchain", sender: nil)
+            let blockchainTypeUInt32 = presenter.blockchainType.blockchain.rawValue
+            sendAnalyticsEvent(screenName: "\(screenTransactionWithChain)\(blockchainTypeUInt32)", eventName: "\(viewInBlockchainWithTxStatus)\(blockchainTypeUInt32)_\(state)")
+        }
     }
     
     func makeConfirmationText() -> String {
@@ -348,6 +368,15 @@ class TransactionViewController: UIViewController, UIScrollViewDelegate {
         }
         
         return textForConfirmations
+    }
+    
+    func makeResendTransactionDTO() -> TransactionDTO {
+        let txDTO = TransactionDTO()
+        txDTO.sendAmount = Double(BigInt(presenter.histObj.txOutAmountString).cryptoValueString(for: BLOCKCHAIN_ETHEREUM).stringWithDot)!
+        txDTO.choosenWallet = presenter.wallet
+        txDTO.sendAddress = presenter.histObj.addressesArray.last
+        
+        return txDTO
     }
     
     override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
@@ -385,7 +414,7 @@ extension AnalyticsDelegate: AnalyticsProtocol {
         if self.presenter.blockedAmount(for: presenter.histObj) > 0 {
             state = 0
         } else {
-            if isIncoming {
+            if isIncoming == true {
                 state = -1
             } else {
                 state = 1

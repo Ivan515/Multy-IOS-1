@@ -32,6 +32,8 @@ extension Constants {
     static let shareString = "SHARE"
     static let magicalReceiveString = "MAGICAL RECEIVE"
     static let transactionInfoString = "TRANSACTION INFO"
+    static let incomingRejectedTransactionString = "INCOMING REJECTED TRANSACTION INFO"
+    static let outcomingRejectedTransactionString = "OUTCOMING REJECTED TRANSACTION INFO"
     static let confirmationString = "CONFIRMATION"
     static let confirmationsString = "CONFIRMATIONS"
     static let notValidAddressString = "NOT VALID ADDRESS"
